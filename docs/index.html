@@ -403,7 +403,8 @@
 
 <script>
 /* ---------------- 基础配置 ---------------- */
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://xxx.onrender.com";
+
 
 /* ---------------- Tab 切换 ---------------- */
 document.querySelectorAll(".tab").forEach(btn => {
@@ -417,7 +418,7 @@ document.querySelectorAll(".tab").forEach(btn => {
 
 /* ---------------- 倒计时 ---------------- */
 async function updateCountdown(){
-  const r = await fetch("http://127.0.0.1:8000/countdown");
+  const r = await fetch("https://xxx.onrender.com/countdown");
   const d = await r.json();
   if(d.expired) return;
 
