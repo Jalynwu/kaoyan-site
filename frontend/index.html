@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>考研个人站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  :root{
+    --bg: #0b1020;
+    --panel: rgba(255,255,255,0.06);
+    --panel2: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.10);
+    --text: rgba(255,255,255,0.92);
+    --muted: rgba(255,255,255,0.65);
+    --brand: #7c5cff;
+    --brand2: #4fd1c5;
+    --shadow: 0 18px 50px rgba(0,0,0,0.35);
+    --radius: 18px;
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Microsoft YaHei UI";
+    background:
+      radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.35), transparent 60%),
+      radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.18), transparent 55%),
+      radial-gradient(900px 700px at 40% 95%, rgba(255,255,255,0.08), transparent 60%),
+      var(--bg);
+  }
+
+  /* 顶部导航 */
+  nav{
+    position: sticky;
+    top:0;
+    z-index: 20;
+    padding: 14px 18px;
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    background: rgba(11,16,32,0.65);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .tab{
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor:pointer;
+    transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    font-size: 14px;
+  }
+  .tab:hover{
+    transform: translateY(-1px);
+    background: rgba(255,255,255,0.07);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.16);
+  }
+  .tab.active{
+    background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(79,209,197,0.20));
+    color: var(--text);
+    border-color: rgba(124,92,255,0.55);
+  }
+
+  /* 区块布局 */
+  section{ display:none; padding: 26px 16px 36px; }
+  section.active{ display:block; }
+
+  /* 卡片容器 */
+  .card{
+    max-width: 920px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  h2{
+    margin: 0 0 10px;
+    font-size: 20px;
+    letter-spacing: .2px;
+  }
+  h3{
+    margin: 16px 0 8px;
+    font-size: 15px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  p{ color: var(--muted); }
+
+  /* 统一表单控件 */
+  .row{ display:flex; gap:10px; flex-wrap: wrap; align-items:center; }
+
+  input{
+    flex: 0 0 auto;
+    min-width: 180px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.04);
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  input::placeholder{ color: rgba(255,255,255,0.45); }
+  input:focus{
+    border-color: rgba(124,92,255,0.55);
+    background: rgba(255,255,255,0.06);
+  }
+
+  button{
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(124,92,255,0.35);
+    background: linear-gradient(135deg, rgba(124,92,255,0.95), rgba(124,92,255,0.70));
+    color: white;
+    cursor:pointer;
+    transition: transform .15s ease, filter .15s ease;
+    font-weight: 600;
+  }
+  button:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+  button:active{ transform: translateY(0); }
+
+  button.secondary{
+    border-color: rgba(255,255,255,0.14);
+    background: rgba(255,255,255,0.06);
+    color: var(--text);
+  }
+
+  hr{
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.10);
+    margin: 16px 0;
+  }
+
+  /* 倒计时强调 */
+  #countdown{
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    margin-top: 12px;
+    background: linear-gradient(90deg, rgba(124,92,255,1), rgba(79,209,197,1));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 留言列表 */
+  #msgList > div{
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 8px 0;
+  }
+
+  /* 聊天框 */
+  #chatBox{
+    border: 1px solid rgba(255,255,255,0.10) !important;
+    background: rgba(255,255,255,0.04) !important;
+  }
+
+  /* TODO 列表 */
+  #todoList{
+    padding-left: 18px;
+    color: var(--text);
+  }
+  #todoList li{
+    margin: 10px 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    list-style: none;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  #todoList input[type="checkbox"]{
+    min-width: auto;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--brand);
+  }
+
+  /* 响应式小优化 */
+  @media (max-width: 520px){
+    nav{ justify-content:flex-start; overflow:auto; }
+    .tab{ white-space: nowrap; }
+    input{ min-width: 140px; }
+    .card{ padding: 16px; }
+  }
+  /* --- Chat bubbles --- */
+  .chat-item{
+    display: flex;
+    margin: 10px 0;
+  }
+  .chat-item.user{ justify-content: flex-end; }
+  .chat-item.assistant{ justify-content: flex-start; }
+  
+  .chat-bubble{
+    max-width: 78%;
+    padding: 10px 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.05);
+    white-space: pre-wrap;
+    line-height: 1.55;
+  }
+  
+  .chat-item.user .chat-bubble{
+    background: linear-gradient(135deg, rgba(124,92,255,0.75), rgba(124,92,255,0.45));
+    border-color: rgba(124,92,255,0.45);
+  }
+  
+  .chat-meta{
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    margin: 4px 4px 0;
+  }
+  
+  .typing{
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .typing span{
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.65);
+    animation: blink 1s infinite;
+  }
+  .typing span:nth-child(2){ animation-delay: .15s; }
+  .typing span:nth-child(3){ animation-delay: .3s; }
+  
+  @keyframes blink{
+    0%, 100%{ opacity: .25; transform: translateY(0); }
+    50%{ opacity: 1; transform: translateY(-2px); }
+  }
+  /* --- Light theme override --- */
+  body.light{
+    --bg: #f6f7fb;
+    --panel: rgba(0,0,0,0.04);
+    --panel2: rgba(0,0,0,0.06);
+    --border: rgba(0,0,0,0.10);
+    --text: rgba(0,0,0,0.88);
+    --muted: rgba(0,0,0,0.55);
+    --shadow: 0 18px 45px rgba(0,0,0,0.12);
+  }
+  body.light{
+    background:
+      radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.18), transparent 60%),
+      radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.10), transparent 55%),
+      radial-gradient(900px 700px at 40% 95%, rgba(0,0,0,0.05), transparent 60%),
+      var(--bg);
+  }
+
+.countdown{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  margin-top:40px;
+}
+
+.time-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px 20px;
+  width:90px;
+  box-shadow:var(--shadow);
+}
+
+.time-box span{
+  display:block;
+  font-size:32px;
+  font-weight:700;
+  transition: transform .2s;
+}
+
+.time-box label{
+  font-size:13px;
+  color:var(--muted);
+  letter-spacing:2px;
+}
+
+/* 跳动效果 */
+.time-box span.jump{
+  transform: translateY(-6px);
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+  <button class="tab active" data-target="sec-home">倒计时</button>
+  <button class="tab" data-target="sec-plan">学习规划</button>
+  <button class="tab" data-target="sec-board">留言板</button>
+  <button class="tab" data-target="sec-ai">AI助手</button>
+  <button class="tab" id="btnTheme" type="button">🌙 夜间</button>
+
+</nav>
+
+<!-- 倒计时 -->
+<section id="sec-home" class="active">
+  <div class="countdown">
+    <div class="time-box">
+      <span id="cd-days">0</span>
+      <label>天</label>
+    </div>
+    <div class="time-box">
+      <span id="cd-hours">0</span>
+      <label>时</label>
+    </div>
+    <div class="time-box">
+      <span id="cd-minutes">0</span>
+      <label>分</label>
+    </div>
+    <div class="time-box">
+      <span id="cd-seconds">0</span>
+      <label>秒</label>
+    </div>
+  </div>
+
+</section>
+
+<!-- 学习规划 -->
+<section id="sec-plan">
+  <div class="card">
+    <h2>学习规划（TODO）</h2>
+
+    <div class="row">
+      <input id="todoInput" placeholder="今天要做什么？" style="flex:1;">
+      <button onclick="addTodo()">添加</button>
+    </div>
+
+    <ul id="todoList" style="margin-top:14px;"></ul>
+  </div>
+</section>
+
+<!-- 留言板 -->
+<section id="sec-board">
+  <div class="card">
+    <h2>留言板</h2>
+
+    <p><b>登录状态：</b><span id="authStatus">未登录</span></p>
+
+    <div class="row">
+      <input id="username" placeholder="用户名">
+      <input id="password" type="password" placeholder="密码">
+      <button onclick="register()">注册</button>
+      <button onclick="login()">登录</button>
+      <button class="secondary" onclick="logout()">退出</button>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <input id="msgContent" placeholder="想对我说的话…" style="flex:1;">
+      <button onclick="postMessage()">发送</button>
+    </div>
+
+    <div id="boardHint" style="margin-top:8px;color:#666;"></div>
+
+    <h3>最新留言</h3>
+    <div id="msgList"></div>
+  </div>
+</section>
+
+<!-- AI -->
+<section id="sec-ai">
+  <div class="card">
+<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+  <h2 style="margin:0;">AI 考研助手</h2>
+  <button class="secondary" id="btnClearChat" type="button">清空对话</button>
+</div>
+
+
+    <div id="chatBox" style="height:360px; overflow:auto; border:1px solid #eee; border-radius:12px; padding:10px; background:#fafafa;"></div>
+
+    <div class="row" style="margin-top:10px;">
+      <input id="chatInput" placeholder="输入问题，回车发送…" style="flex:1;">
+      <button onclick="sendChat()">发送</button>
+    </div>
+
+    <div id="chatHint" style="margin-top:6px;color:#666;"></div>
+  </div>
+</section>
+
+<script>
+/* ---------------- 基础配置 ---------------- */
+const API_BASE = "http://127.0.0.1:8000";
+
+/* ---------------- Tab 切换 ---------------- */
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  };
+});
+
+/* ---------------- 倒计时 ---------------- */
+async function updateCountdown(){
+  const r = await fetch("http://127.0.0.1:8000/countdown");
+  const d = await r.json();
+  if(d.expired) return;
+
+  updateNum("cd-days", d.days);
+  updateNum("cd-hours", d.hours);
+  updateNum("cd-minutes", d.minutes);
+  updateNum("cd-seconds", d.seconds);
+}
+
+function updateNum(id, val){
+  const el = document.getElementById(id);
+  if(el.textContent !== String(val)){
+    el.textContent = val;
+    el.classList.add("jump");
+    setTimeout(()=>el.classList.remove("jump"),200);
+  }
+}
+
+/* 启动 */
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+
+/* ---------------- Token ---------------- */
+const setToken = t => localStorage.setItem("token", t);
+const getToken = () => localStorage.getItem("token");
+const clearToken = () => localStorage.removeItem("token");
+
+function updateAuthUI() {
+  authStatus.textContent = getToken() ? "已登录" : "未登录";
+}
+updateAuthUI();
+
+/* ---------------- 留言板 ---------------- */
+async function register() {
+  const u = username.value.trim(), p = password.value;
+  const r = await fetch(`${API_BASE}/auth/register?username=${u}&password=${p}`, {method:"POST"});
+  boardHint.textContent = r.ok ? "注册成功" : "注册失败";
+}
+
+async function login() {
+  const u = username.value.trim(), p = password.value;
+  const r = await fetch(`${API_BASE}/auth/login?username=${u}&password=${p}`, {method:"POST"});
+  const d = await r.json();
+  if (r.ok) {
+    setToken(d.access_token);
+    updateAuthUI();
+    boardHint.textContent = "登录成功";
+  } else boardHint.textContent = "登录失败";
+}
+
+function logout() {
+  clearToken();
+  updateAuthUI();
+}
+
+async function postMessage() {
+  const t = getToken();
+  if (!t) return boardHint.textContent = "请先登录";
+  const r = await fetch(`${API_BASE}/messages?content=${msgContent.value}`, {
+    method:"POST",
+    headers:{Authorization:`Bearer ${t}`}
+  });
+  if (r.ok) {
+    msgContent.value="";
+    loadMessages();
+  }
+}
+
+async function loadMessages() {
+  const r = await fetch(API_BASE + "/messages");
+  const d = await r.json();
+  msgList.innerHTML = d.items.map(m =>
+    `<div style="border:1px solid #eee;padding:8px;border-radius:8px;margin-bottom:6px;">
+      <b>${m.username}</b>：${m.content}
+     </div>`
+  ).join("");
+}
+loadMessages();
+
+/* ---------------- AI 多轮 ---------------- */
+let chatHistory = JSON.parse(localStorage.getItem("chatHistory")||"[]");
+
+function saveChat() {
+  localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+}
+
+function renderChat() {
+  chatBox.innerHTML = "";
+  for (const m of chatHistory) {
+    const item = document.createElement("div");
+    item.className = "chat-item " + (m.role === "user" ? "user" : "assistant");
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+    bubble.textContent = m.content;
+
+    item.appendChild(bubble);
+    chatBox.appendChild(item);
+  }
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+renderChat();
+
+async function sendChat() {
+  if (!getToken()) return chatHint.textContent = "请先登录";
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+
+  chatHint.textContent = "";
+  chatInput.value = "";
+
+  // 1) 写入用户消息历史
+  chatHistory.push({ role: "user", content: msg });
+  saveChat();
+  renderChat();
+
+  // 2) 插入 typing 动画（不进历史）
+  const typingItem = document.createElement("div");
+  typingItem.className = "chat-item assistant";
+  typingItem.innerHTML = `
+    <div class="chat-bubble">
+      <span class="typing"><span></span><span></span><span></span></span>
+    </div>
+  `;
+  chatBox.appendChild(typingItem);
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  try {
+    const last = chatHistory.slice(-10);
+    const r = await fetch(`${API_BASE}/ai/chat2?history=${encodeURIComponent(JSON.stringify(last))}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${getToken()}` }
+    });
+    const d = await r.json();
+
+    // 移除 typing
+    typingItem.remove();
+
+    if (!r.ok) {
+      chatHistory.push({ role: "assistant", content: `请求失败：${d.detail || r.status}` });
+      saveChat();
+      renderChat();
+      return;
+    }
+
+    chatHistory.push({ role: "assistant", content: d.reply || "(空回复)" });
+    saveChat();
+    renderChat();
+  } catch (e) {
+    typingItem.remove();
+    chatHistory.push({ role: "assistant", content: "网络/后端错误：请确认后端已启动" });
+    saveChat();
+    renderChat();
+  }
+}
+
+
+/* ---------------- TODO ---------------- */
+let todos=JSON.parse(localStorage.getItem("todos")||"[]");
+
+function saveTodos(){localStorage.setItem("todos",JSON.stringify(todos));}
+function renderTodos(){
+  todoList.innerHTML="";
+  todos.forEach((t,i)=>{
+    const li=document.createElement("li");
+    li.innerHTML=`<input type="checkbox" ${t.done?"checked":""}
+      onchange="toggleTodo(${i})"> ${t.text}`;
+    todoList.appendChild(li);
+  });
+}
+function addTodo(){
+  if(!todoInput.value)return;
+  todos.push({text:todoInput.value,done:false});
+  todoInput.value="";
+  saveTodos(); renderTodos();
+}
+function toggleTodo(i){
+  todos[i].done=!todos[i].done;
+  saveTodos(); renderTodos();
+}
+renderTodos();
+
+document.getElementById("btnClearChat").addEventListener("click", () => {
+  chatHistory = [];
+  saveChat();
+  renderChat();
+  chatHint.textContent = "已清空对话";
+});
+// --- Theme toggle ---
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.body.classList.add("light");
+    document.getElementById("btnTheme").textContent = "☀️ 日间";
+  } else {
+    document.body.classList.remove("light");
+    document.getElementById("btnTheme").textContent = "🌙 夜间";
+  }
+  localStorage.setItem("theme", theme);
+}
+
+// 初始化主题
+applyTheme(localStorage.getItem("theme") || "dark");
+
+// 按钮点击切换
+document.getElementById("btnTheme").addEventListener("click", () => {
+  const cur = localStorage.getItem("theme") || "dark";
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+
+
+</script>
+
+</body>
+</html>
