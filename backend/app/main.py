@@ -14,6 +14,7 @@ from .models import Message
 from .deps import get_current_user, get_db
 from .ai import chat_with_ai
 from .ai import chat_with_ai_history
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
@@ -148,3 +149,15 @@ def ai_chat2(
     hist = json.loads(history)
     reply = chat_with_ai_history(hist)
     return {"reply": reply}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",  # 你本地前端如果用 Live Server
+        "http://localhost:5500",
+        "https://jalynwu.github.io",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
