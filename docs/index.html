@@ -5,399 +5,485 @@
   <title>考研个人站</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-  :root{
-    --bg: #0b1020;
-    --panel: rgba(255,255,255,0.06);
-    --panel2: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.10);
-    --text: rgba(255,255,255,0.92);
-    --muted: rgba(255,255,255,0.65);
-    --brand: #7c5cff;
-    --brand2: #4fd1c5;
-    --shadow: 0 18px 50px rgba(0,0,0,0.35);
-    --radius: 18px;
-  }
+  <style>
+    :root{
+      --bg: #0b1020;
+      --panel: rgba(255,255,255,0.06);
+      --panel2: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.12);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.65);
+      --brand: #7c5cff;
+      --brand2: #4fd1c5;
+      --shadow: 0 18px 50px rgba(0,0,0,0.35);
+      --radius: 18px;
+      --radius2: 24px;
+    }
 
-  *{ box-sizing: border-box; }
-  html,body{ height:100%; }
-  body{
-    margin:0;
-    color: var(--text);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Microsoft YaHei UI";
-    background:
-      radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.35), transparent 60%),
-      radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.18), transparent 55%),
-      radial-gradient(900px 700px at 40% 95%, rgba(255,255,255,0.08), transparent 60%),
-      var(--bg);
-  }
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Microsoft YaHei UI", "PingFang SC";
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.35), transparent 60%),
+        radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.18), transparent 55%),
+        radial-gradient(900px 700px at 40% 95%, rgba(255,255,255,0.08), transparent 60%),
+        var(--bg);
+      overflow-x: hidden;
+    }
 
-  /* 顶部导航 */
-  nav{
-    position: sticky;
-    top:0;
-    z-index: 20;
-    padding: 14px 18px;
-    display:flex;
-    gap:10px;
-    justify-content:center;
-    background: rgba(11,16,32,0.65);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
+    /* 顶部导航 */
+    nav{
+      position: sticky;
+      top:0;
+      z-index: 20;
+      padding: 12px 12px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      background: rgba(11,16,32,0.65);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    nav::-webkit-scrollbar{ display:none; }
 
-  .tab{
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(255,255,255,0.04);
-    color: var(--muted);
-    padding: 10px 14px;
-    border-radius: 999px;
-    cursor:pointer;
-    transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-    font-size: 14px;
-  }
-  .tab:hover{
-    transform: translateY(-1px);
-    background: rgba(255,255,255,0.07);
-    color: var(--text);
-    border-color: rgba(255,255,255,0.16);
-  }
-  .tab.active{
-    background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(79,209,197,0.20));
-    color: var(--text);
-    border-color: rgba(124,92,255,0.55);
-  }
+    .tab{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor:pointer;
+      transition: transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+      font-size: 14px;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .tab:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.16);
+    }
+    .tab.active{
+      background: linear-gradient(135deg, rgba(124,92,255,0.35), rgba(79,209,197,0.20));
+      color: var(--text);
+      border-color: rgba(124,92,255,0.55);
+    }
 
-  /* 区块布局 */
-  section{ display:none; padding: 26px 16px 36px; }
-  section.active{ display:block; }
+    /* 区块布局 */
+    section{ display:none; padding: 22px 14px 44px; }
+    section.active{ display:block; }
 
-  /* 卡片容器 */
-  .card{
-    max-width: 920px;
-    margin: 0 auto;
-    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.04));
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+    }
 
-  h2{
-    margin: 0 0 10px;
-    font-size: 20px;
-    letter-spacing: .2px;
-  }
-  h3{
-    margin: 16px 0 8px;
-    font-size: 15px;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  p{ color: var(--muted); }
+    /* 卡片容器 */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius2);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
 
-  /* 统一表单控件 */
-  .row{ display:flex; gap:10px; flex-wrap: wrap; align-items:center; }
+    h2{
+      margin: 0 0 10px;
+      font-size: clamp(18px, 2.3vw, 22px);
+      letter-spacing: .2px;
+    }
+    h3{
+      margin: 16px 0 8px;
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    p{ color: var(--muted); margin: 8px 0; }
 
-  input{
-    flex: 0 0 auto;
-    min-width: 180px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(255,255,255,0.04);
-    color: var(--text);
-    outline: none;
-    transition: border-color .15s ease, background .15s ease;
-  }
-  input::placeholder{ color: rgba(255,255,255,0.45); }
-  input:focus{
-    border-color: rgba(124,92,255,0.55);
-    background: rgba(255,255,255,0.06);
-  }
+    /* 统一表单控件 */
+    .row{ display:flex; gap:10px; flex-wrap: wrap; align-items:center; }
 
-  button{
-    padding: 10px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(124,92,255,0.35);
-    background: linear-gradient(135deg, rgba(124,92,255,0.95), rgba(124,92,255,0.70));
-    color: white;
-    cursor:pointer;
-    transition: transform .15s ease, filter .15s ease;
-    font-weight: 600;
-  }
-  button:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-  button:active{ transform: translateY(0); }
+    input{
+      flex: 0 0 auto;
+      min-width: 180px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.45); }
+    input:focus{
+      border-color: rgba(124,92,255,0.55);
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-1px);
+    }
 
-  button.secondary{
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(255,255,255,0.06);
-    color: var(--text);
-  }
+    button{
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(124,92,255,0.35);
+      background: linear-gradient(135deg, rgba(124,92,255,0.95), rgba(124,92,255,0.70));
+      color: white;
+      cursor:pointer;
+      transition: transform .15s ease, filter .15s ease;
+      font-weight: 700;
+      flex: 0 0 auto;
+    }
+    button:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    button:active{ transform: translateY(0); }
 
-  hr{
-    border: none;
-    height: 1px;
-    background: rgba(255,255,255,0.10);
-    margin: 16px 0;
-  }
+    button.secondary{
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+    }
 
-  /* 倒计时强调 */
-  #countdown{
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: .5px;
-    margin-top: 12px;
-    background: linear-gradient(90deg, rgba(124,92,255,1), rgba(79,209,197,1));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+    hr{
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,0.10);
+      margin: 16px 0;
+    }
 
-  /* 留言列表 */
-  #msgList > div{
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 10px 12px;
-    margin: 8px 0;
-  }
+    /* ========== 倒计时（重点美化） ========== */
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height: calc(100vh - 72px);
+    }
 
-  /* 聊天框 */
-  #chatBox{
-    border: 1px solid rgba(255,255,255,0.10) !important;
-    background: rgba(255,255,255,0.04) !important;
-  }
+    .hero-inner{
+      width: 100%;
+    }
 
-  /* TODO 列表 */
-  #todoList{
-    padding-left: 18px;
-    color: var(--text);
-  }
-  #todoList li{
-    margin: 10px 0;
-    padding: 8px 10px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    list-style: none;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  #todoList input[type="checkbox"]{
-    min-width: auto;
-    width: 18px;
-    height: 18px;
-    accent-color: var(--brand);
-  }
+    .hero-title{
+      text-align:center;
+      margin: 0 0 10px;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 900;
+      letter-spacing: .6px;
+      background: linear-gradient(90deg, rgba(124,92,255,1), rgba(79,209,197,1));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
 
-  /* 响应式小优化 */
-  @media (max-width: 520px){
-    nav{ justify-content:flex-start; overflow:auto; }
-    .tab{ white-space: nowrap; }
-    input{ min-width: 140px; }
-    .card{ padding: 16px; }
-  }
-  /* --- Chat bubbles --- */
-  .chat-item{
-    display: flex;
-    margin: 10px 0;
-  }
-  .chat-item.user{ justify-content: flex-end; }
-  .chat-item.assistant{ justify-content: flex-start; }
-  
-  .chat-bubble{
-    max-width: 78%;
-    padding: 10px 12px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.10);
-    background: rgba(255,255,255,0.05);
-    white-space: pre-wrap;
-    line-height: 1.55;
-  }
-  
-  .chat-item.user .chat-bubble{
-    background: linear-gradient(135deg, rgba(124,92,255,0.75), rgba(124,92,255,0.45));
-    border-color: rgba(124,92,255,0.45);
-  }
-  
-  .chat-meta{
-    font-size: 12px;
-    color: rgba(255,255,255,0.55);
-    margin: 4px 4px 0;
-  }
-  
-  .typing{
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-  }
-  .typing span{
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: rgba(255,255,255,0.65);
-    animation: blink 1s infinite;
-  }
-  .typing span:nth-child(2){ animation-delay: .15s; }
-  .typing span:nth-child(3){ animation-delay: .3s; }
-  
-  @keyframes blink{
-    0%, 100%{ opacity: .25; transform: translateY(0); }
-    50%{ opacity: 1; transform: translateY(-2px); }
-  }
-  /* --- Light theme override --- */
-  body.light{
-    --bg: #f6f7fb;
-    --panel: rgba(0,0,0,0.04);
-    --panel2: rgba(0,0,0,0.06);
-    --border: rgba(0,0,0,0.10);
-    --text: rgba(0,0,0,0.88);
-    --muted: rgba(0,0,0,0.55);
-    --shadow: 0 18px 45px rgba(0,0,0,0.12);
-  }
-  body.light{
-    background:
-      radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.18), transparent 60%),
-      radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.10), transparent 55%),
-      radial-gradient(900px 700px at 40% 95%, rgba(0,0,0,0.05), transparent 60%),
-      var(--bg);
-  }
+    .hero-sub{
+      text-align:center;
+      color: var(--muted);
+      margin: 0 0 16px;
+      font-size: clamp(12px, 1.8vw, 14px);
+    }
 
-.countdown{
-  display:flex;
-  gap:18px;
-  justify-content:center;
-  margin-top:40px;
-}
+    .countdown{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(70px, 120px));
+      gap: clamp(10px, 2.2vw, 18px);
+      justify-content: center; /* 整体居中 */
+      align-items: stretch;
+      margin-top: 18px;
+    }
 
-.time-box{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px 20px;
-  width:90px;
-  box-shadow:var(--shadow);
-}
+    .time-box{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(12px, 2.4vw, 18px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      text-align:center; /* 内容居中 */
+    }
 
-.time-box span{
-  display:block;
-  font-size:32px;
-  font-weight:700;
-  transition: transform .2s;
-}
+    .time-box::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 30%, rgba(124,92,255,0.25), transparent 55%),
+                  radial-gradient(circle at 80% 60%, rgba(79,209,197,0.16), transparent 55%);
+      filter: blur(6px);
+      opacity: .7;
+      pointer-events:none;
+    }
 
-.time-box label{
-  font-size:13px;
-  color:var(--muted);
-  letter-spacing:2px;
-}
+    .time-num{
+      position: relative;
+      display:block;
+      font-size: clamp(32px, 5.5vw, 56px); /* 数字更大 */
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: .6px;
+      margin-top: 2px;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
 
-/* 跳动效果 */
-.time-box span.jump{
-  transform: translateY(-6px);
-}
+    .time-lab{
+      position: relative;
+      display:block;
+      margin-top: 10px;
+      font-size: clamp(18px, 2.6vw, 24px); /* “天/时/分/秒”更大 */
+      font-weight: 800;
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 4px;
+    }
 
+    /* 跳动效果 */
+    .jump{
+      transform: translateY(-6px);
+      transition: transform .18s ease;
+    }
 
-</style>
+    .hint{
+      margin-top: 12px;
+      text-align:center;
+      color: rgba(255,255,255,0.55);
+      font-size: 12px;
+    }
 
+    /* 留言列表 */
+    #msgList .msg{
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin: 8px 0;
+    }
+    #msgList .meta{
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    /* Chat bubbles */
+    #chatBox{
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .chat-item{
+      display: flex;
+      margin: 10px 0;
+    }
+    .chat-item.user{ justify-content: flex-end; }
+    .chat-item.assistant{ justify-content: flex-start; }
+
+    .chat-bubble{
+      max-width: 78%;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      white-space: pre-wrap;
+      line-height: 1.55;
+    }
+    .chat-item.user .chat-bubble{
+      background: linear-gradient(135deg, rgba(124,92,255,0.75), rgba(124,92,255,0.45));
+      border-color: rgba(124,92,255,0.45);
+    }
+    .typing{
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+    .typing span{
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.65);
+      animation: blink 1s infinite;
+    }
+    .typing span:nth-child(2){ animation-delay: .15s; }
+    .typing span:nth-child(3){ animation-delay: .3s; }
+    @keyframes blink{
+      0%, 100%{ opacity: .25; transform: translateY(0); }
+      50%{ opacity: 1; transform: translateY(-2px); }
+    }
+
+    /* TODO 列表 */
+    #todoList{
+      padding-left: 0;
+      margin: 14px 0 0;
+    }
+    #todoList li{
+      margin: 10px 0;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      list-style: none;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    #todoList input[type="checkbox"]{
+      min-width: auto;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand);
+    }
+
+    /* 手机端：倒计时 2x2 */
+    @media (max-width: 520px){
+      .countdown{
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        max-width: 380px;
+        margin-left:auto;
+        margin-right:auto;
+      }
+      input{ min-width: 140px; }
+      .card{ padding: 16px; }
+      .hero{ min-height: calc(100vh - 66px); }
+    }
+
+    /* Light theme */
+    body.light{
+      --bg: #f6f7fb;
+      --panel: rgba(0,0,0,0.04);
+      --panel2: rgba(0,0,0,0.06);
+      --border: rgba(0,0,0,0.10);
+      --text: rgba(0,0,0,0.88);
+      --muted: rgba(0,0,0,0.55);
+      --shadow: 0 18px 45px rgba(0,0,0,0.12);
+    }
+    body.light{
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,0.18), transparent 60%),
+        radial-gradient(900px 700px at 85% 20%, rgba(79,209,197,0.10), transparent 55%),
+        radial-gradient(900px 700px at 40% 95%, rgba(0,0,0,0.05), transparent 60%),
+        var(--bg);
+    }
+    body.light .time-lab{ color: rgba(0,0,0,0.70); }
+    body.light .hero-sub{ color: rgba(0,0,0,0.55); }
+
+    /* 减少动画偏好 */
+    @media (prefers-reduced-motion: reduce){
+      *{ transition: none !important; animation: none !important; }
+      .jump{ transform: none !important; }
+    }
+  </style>
 </head>
 
 <body>
 
 <nav>
-  <button class="tab active" data-target="sec-home">倒计时</button>
-  <button class="tab" data-target="sec-plan">学习规划</button>
-  <button class="tab" data-target="sec-board">留言板</button>
-  <button class="tab" data-target="sec-ai">AI助手</button>
+  <button class="tab active" data-target="sec-home" type="button">倒计时</button>
+  <button class="tab" data-target="sec-plan" type="button">学习规划</button>
+  <button class="tab" data-target="sec-board" type="button">留言板</button>
+  <button class="tab" data-target="sec-ai" type="button">AI助手</button>
   <button class="tab" id="btnTheme" type="button">🌙 夜间</button>
-
 </nav>
 
 <!-- 倒计时 -->
 <section id="sec-home" class="active">
-  <div class="countdown">
-    <div class="time-box">
-      <span id="cd-days">0</span>
-      <label>天</label>
-    </div>
-    <div class="time-box">
-      <span id="cd-hours">0</span>
-      <label>时</label>
-    </div>
-    <div class="time-box">
-      <span id="cd-minutes">0</span>
-      <label>分</label>
-    </div>
-    <div class="time-box">
-      <span id="cd-seconds">0</span>
-      <label>秒</label>
+  <div class="wrap hero">
+    <div class="hero-inner">
+      <div class="card">
+        <h2 class="hero-title">距离 2026 考研 还剩</h2>
+        <p class="hero-sub">目标时间：2026-12-19 00:00:00（UTC）</p>
+
+        <div class="countdown" aria-label="countdown">
+          <div class="time-box">
+            <span class="time-num" id="cd-days">0</span>
+            <label class="time-lab">天</label>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="cd-hours">0</span>
+            <label class="time-lab">时</label>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="cd-minutes">0</span>
+            <label class="time-lab">分</label>
+          </div>
+          <div class="time-box">
+            <span class="time-num" id="cd-seconds">0</span>
+            <label class="time-lab">秒</label>
+          </div>
+        </div>
+
+        <div class="hint" id="cdHint">正在同步服务器时间…</div>
+      </div>
     </div>
   </div>
-
 </section>
 
 <!-- 学习规划 -->
 <section id="sec-plan">
-  <div class="card">
-    <h2>学习规划（TODO）</h2>
+  <div class="wrap">
+    <div class="card">
+      <h2>学习规划（TODO）</h2>
 
-    <div class="row">
-      <input id="todoInput" placeholder="今天要做什么？" style="flex:1;">
-      <button onclick="addTodo()">添加</button>
+      <div class="row">
+        <input id="todoInput" placeholder="今天要做什么？" style="flex:1;">
+        <button id="btnAddTodo" type="button">添加</button>
+      </div>
+
+      <ul id="todoList"></ul>
     </div>
-
-    <ul id="todoList" style="margin-top:14px;"></ul>
   </div>
 </section>
 
 <!-- 留言板 -->
 <section id="sec-board">
-  <div class="card">
-    <h2>留言板</h2>
+  <div class="wrap">
+    <div class="card">
+      <h2>留言板</h2>
 
-    <p><b>登录状态：</b><span id="authStatus">未登录</span></p>
+      <p><b>登录状态：</b><span id="authStatus">未登录</span></p>
 
-    <div class="row">
-      <input id="username" placeholder="用户名">
-      <input id="password" type="password" placeholder="密码">
-      <button onclick="register()">注册</button>
-      <button onclick="login()">登录</button>
-      <button class="secondary" onclick="logout()">退出</button>
+      <div class="row">
+        <input id="username" placeholder="用户名">
+        <input id="password" type="password" placeholder="密码">
+        <button id="btnRegister" type="button">注册</button>
+        <button id="btnLogin" type="button">登录</button>
+        <button class="secondary" id="btnLogout" type="button">退出</button>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <input id="msgContent" placeholder="想对我说的话…" style="flex:1;">
+        <button id="btnPostMsg" type="button">发送</button>
+      </div>
+
+      <div id="boardHint" style="margin-top:8px;color:rgba(255,255,255,0.65);"></div>
+
+      <h3>最新留言</h3>
+      <div id="msgList"></div>
     </div>
-
-    <hr>
-
-    <div class="row">
-      <input id="msgContent" placeholder="想对我说的话…" style="flex:1;">
-      <button onclick="postMessage()">发送</button>
-    </div>
-
-    <div id="boardHint" style="margin-top:8px;color:#666;"></div>
-
-    <h3>最新留言</h3>
-    <div id="msgList"></div>
   </div>
 </section>
 
 <!-- AI -->
 <section id="sec-ai">
-  <div class="card">
-<div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-  <h2 style="margin:0;">AI 考研助手</h2>
-  <button class="secondary" id="btnClearChat" type="button">清空对话</button>
-</div>
+  <div class="wrap">
+    <div class="card">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <h2 style="margin:0;">AI 考研助手</h2>
+        <button class="secondary" id="btnClearChat" type="button">清空对话</button>
+      </div>
 
+      <div id="chatBox" style="height:360px; overflow:auto; margin-top:12px;"></div>
 
-    <div id="chatBox" style="height:360px; overflow:auto; border:1px solid #eee; border-radius:12px; padding:10px; background:#fafafa;"></div>
+      <div class="row" style="margin-top:10px;">
+        <input id="chatInput" placeholder="输入问题，回车发送…" style="flex:1;">
+        <button id="btnSendChat" type="button">发送</button>
+      </div>
 
-    <div class="row" style="margin-top:10px;">
-      <input id="chatInput" placeholder="输入问题，回车发送…" style="flex:1;">
-      <button onclick="sendChat()">发送</button>
+      <div id="chatHint" style="margin-top:6px;color:rgba(255,255,255,0.65);"></div>
     </div>
-
-    <div id="chatHint" style="margin-top:6px;color:#666;"></div>
   </div>
 </section>
 
@@ -405,111 +491,205 @@
 /* ---------------- 基础配置 ---------------- */
 const API_BASE = "https://kaoyan-site.onrender.com";
 
+/* ---------------- 小工具：安全与请求 ---------------- */
+function qs(v){ return encodeURIComponent(v ?? ""); }
 
+async function apiFetch(path, options = {}, timeoutMs = 15000){
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
 
-/* ---------------- Tab 切换 ---------------- */
-document.querySelectorAll(".tab").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.target).classList.add("active");
-  };
-});
-
-/* ---------------- 倒计时 ---------------- */
-async function updateCountdown(){
-  const r = await fetch("https://kaoyan-site.onrender.com/countdown");
-  const d = await r.json();
-  if(d.expired) return;
-
-  updateNum("cd-days", d.days);
-  updateNum("cd-hours", d.hours);
-  updateNum("cd-minutes", d.minutes);
-  updateNum("cd-seconds", d.seconds);
-}
-
-function updateNum(id, val){
-  const el = document.getElementById(id);
-  if(el.textContent !== String(val)){
-    el.textContent = val;
-    el.classList.add("jump");
-    setTimeout(()=>el.classList.remove("jump"),200);
+  try{
+    const r = await fetch(API_BASE + path, {
+      ...options,
+      signal: controller.signal,
+    });
+    return r;
+  } finally {
+    clearTimeout(t);
   }
 }
 
-/* 启动 */
+function setToken(t){ localStorage.setItem("token", t); }
+function getToken(){ return localStorage.getItem("token"); }
+function clearToken(){ localStorage.removeItem("token"); }
+
+/* ---------------- Tab 切换 ---------------- */
+document.querySelectorAll(".tab").forEach(btn => {
+  const target = btn.dataset.target;
+  if(!target) return;
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(target).classList.add("active");
+  });
+});
+
+/* ---------------- 主题切换 ---------------- */
+function applyTheme(theme) {
+  if (theme === "light") {
+    document.body.classList.add("light");
+    document.getElementById("btnTheme").textContent = "☀️ 日间";
+  } else {
+    document.body.classList.remove("light");
+    document.getElementById("btnTheme").textContent = "🌙 夜间";
+  }
+  localStorage.setItem("theme", theme);
+}
+applyTheme(localStorage.getItem("theme") || "dark");
+document.getElementById("btnTheme").addEventListener("click", () => {
+  const cur = localStorage.getItem("theme") || "dark";
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+
+/* ---------------- 倒计时 ---------------- */
+function jumpIfChanged(id, val){
+  const el = document.getElementById(id);
+  const s = String(val);
+  if(el.textContent !== s){
+    el.textContent = s;
+    el.classList.add("jump");
+    setTimeout(()=>el.classList.remove("jump"),180);
+  }
+}
+
+async function updateCountdown(){
+  try{
+    const r = await apiFetch("/countdown", { method: "GET" }, 8000);
+    if(!r.ok){
+      document.getElementById("cdHint").textContent = `倒计时请求失败：HTTP ${r.status}`;
+      return;
+    }
+    const d = await r.json();
+    if(d.expired){
+      document.getElementById("cdHint").textContent = "已到达目标时间，冲！";
+      jumpIfChanged("cd-days", 0);
+      jumpIfChanged("cd-hours", 0);
+      jumpIfChanged("cd-minutes", 0);
+      jumpIfChanged("cd-seconds", 0);
+      return;
+    }
+    jumpIfChanged("cd-days", d.days);
+    jumpIfChanged("cd-hours", d.hours);
+    jumpIfChanged("cd-minutes", d.minutes);
+    jumpIfChanged("cd-seconds", d.seconds);
+    document.getElementById("cdHint").textContent = "每秒自动刷新（来自后端）";
+  }catch(e){
+    document.getElementById("cdHint").textContent = "网络错误：无法连接后端（Render）";
+  }
+}
 updateCountdown();
 setInterval(updateCountdown, 1000);
 
-
-/* ---------------- Token ---------------- */
-const setToken = t => localStorage.setItem("token", t);
-const getToken = () => localStorage.getItem("token");
-const clearToken = () => localStorage.removeItem("token");
-
+/* ---------------- 登录状态 UI ---------------- */
+const authStatus = document.getElementById("authStatus");
 function updateAuthUI() {
   authStatus.textContent = getToken() ? "已登录" : "未登录";
 }
 updateAuthUI();
 
 /* ---------------- 留言板 ---------------- */
+const usernameEl = document.getElementById("username");
+const passwordEl = document.getElementById("password");
+const msgContentEl = document.getElementById("msgContent");
+const boardHintEl = document.getElementById("boardHint");
+const msgListEl = document.getElementById("msgList");
+
 async function register() {
-  const u = username.value.trim(), p = password.value;
-  const r = await fetch(`${API_BASE}/auth/register?username=${u}&password=${p}`, {method:"POST"});
-  boardHint.textContent = r.ok ? "注册成功" : "注册失败";
+  const u = usernameEl.value.trim();
+  const p = passwordEl.value;
+  if(!u || !p) return boardHintEl.textContent = "用户名和密码不能为空";
+
+  const r = await apiFetch(`/auth/register?username=${qs(u)}&password=${qs(p)}`, { method:"POST" });
+  boardHintEl.textContent = r.ok ? "注册成功 ✅" : `注册失败：HTTP ${r.status}`;
 }
 
 async function login() {
-  const u = username.value.trim(), p = password.value;
-  const r = await fetch(`${API_BASE}/auth/login?username=${u}&password=${p}`, {method:"POST"});
-  const d = await r.json();
-  if (r.ok) {
+  const u = usernameEl.value.trim();
+  const p = passwordEl.value;
+  if(!u || !p) return boardHintEl.textContent = "用户名和密码不能为空";
+
+  const r = await apiFetch(`/auth/login?username=${qs(u)}&password=${qs(p)}`, { method:"POST" });
+  const d = await r.json().catch(()=> ({}));
+  if (r.ok && d.access_token) {
     setToken(d.access_token);
     updateAuthUI();
-    boardHint.textContent = "登录成功";
-  } else boardHint.textContent = "登录失败";
+    boardHintEl.textContent = "登录成功 ✅";
+  } else {
+    boardHintEl.textContent = `登录失败：${d.detail || ("HTTP " + r.status)}`;
+  }
 }
 
 function logout() {
   clearToken();
   updateAuthUI();
+  boardHintEl.textContent = "已退出";
 }
 
 async function postMessage() {
   const t = getToken();
-  if (!t) return boardHint.textContent = "请先登录";
-  const r = await fetch(`${API_BASE}/messages?content=${msgContent.value}`, {
+  if (!t) return boardHintEl.textContent = "请先登录";
+  const content = msgContentEl.value.trim();
+  if(!content) return boardHintEl.textContent = "留言内容不能为空";
+
+  const r = await apiFetch(`/messages?content=${qs(content)}`, {
     method:"POST",
-    headers:{Authorization:`Bearer ${t}`}
+    headers:{ Authorization:`Bearer ${t}` }
   });
+
   if (r.ok) {
-    msgContent.value="";
+    msgContentEl.value = "";
+    boardHintEl.textContent = "发送成功 ✅";
     loadMessages();
+  } else {
+    const d = await r.json().catch(()=> ({}));
+    boardHintEl.textContent = `发送失败：${d.detail || ("HTTP " + r.status)}`;
   }
 }
 
 async function loadMessages() {
-  const r = await fetch(API_BASE + "/messages");
-  const d = await r.json();
-  msgList.innerHTML = d.items.map(m =>
-    `<div style="border:1px solid #eee;padding:8px;border-radius:8px;margin-bottom:6px;">
-      <b>${m.username}</b>：${m.content}
-     </div>`
-  ).join("");
+  const r = await apiFetch("/messages", { method:"GET" });
+  if(!r.ok){
+    msgListEl.innerHTML = "";
+    boardHintEl.textContent = `加载留言失败：HTTP ${r.status}`;
+    return;
+  }
+  const d = await r.json().catch(()=>({items:[]}));
+  msgListEl.innerHTML = "";
+  (d.items || []).forEach(m => {
+    const div = document.createElement("div");
+    div.className = "msg";
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = m.username ? `@${m.username}` : "@unknown";
+
+    const content = document.createElement("div");
+    content.textContent = m.content ?? "";
+
+    div.appendChild(meta);
+    div.appendChild(content);
+    msgListEl.appendChild(div);
+  });
 }
 loadMessages();
 
-/* ---------------- AI 多轮 ---------------- */
+document.getElementById("btnRegister").addEventListener("click", register);
+document.getElementById("btnLogin").addEventListener("click", login);
+document.getElementById("btnLogout").addEventListener("click", logout);
+document.getElementById("btnPostMsg").addEventListener("click", postMessage);
+
+/* ---------------- AI：优先 stream，失败自动降级 ---------------- */
+const chatBox = document.getElementById("chatBox");
+const chatInput = document.getElementById("chatInput");
+const chatHint = document.getElementById("chatHint");
+
 let chatHistory = JSON.parse(localStorage.getItem("chatHistory")||"[]");
+function saveChat(){ localStorage.setItem("chatHistory", JSON.stringify(chatHistory)); }
 
-function saveChat() {
-  localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
-}
-
-function renderChat() {
+function renderChat(){
   chatBox.innerHTML = "";
-  for (const m of chatHistory) {
+  for(const m of chatHistory){
     const item = document.createElement("div");
     item.className = "chat-item " + (m.role === "user" ? "user" : "assistant");
 
@@ -522,87 +702,163 @@ function renderChat() {
   }
   chatBox.scrollTop = chatBox.scrollHeight;
 }
-
 renderChat();
 
-async function sendChat() {
-  if (!getToken()) return chatHint.textContent = "请先登录";
+function addTyping(){
+  const typingItem = document.createElement("div");
+  typingItem.className = "chat-item assistant";
+  typingItem.innerHTML = `
+    <div class="chat-bubble">
+      <span class="typing"><span></span><span></span><span></span></span>
+    </div>`;
+  chatBox.appendChild(typingItem);
+  chatBox.scrollTop = chatBox.scrollHeight;
+  return typingItem;
+}
+
+/* 解析 SSE：读取 data: 行 */
+async function postStreamSSE(path, payload, onDelta){
+  const t = getToken();
+  const r = await apiFetch(path, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${t}`,
+    },
+    body: JSON.stringify(payload)
+  }, 60000);
+
+  if(!r.ok){
+    const d = await r.json().catch(()=> ({}));
+    return { ok:false, status:r.status, detail: d.detail || null };
+  }
+
+  const reader = r.body.getReader();
+  const decoder = new TextDecoder("utf-8");
+  let buf = "";
+
+  while(true){
+    const { value, done } = await reader.read();
+    if(done) break;
+    buf += decoder.decode(value, { stream:true });
+
+    // 按 SSE 事件分割（空行）
+    const parts = buf.split("\n\n");
+    buf = parts.pop() || "";
+
+    for(const part of parts){
+      // 找 data: 行
+      const lines = part.split("\n");
+      for(const line of lines){
+        const s = line.trim();
+        if(s.startsWith("data:")){
+          const data = s.slice(5).trim();
+          if(!data) continue;
+          if(data === "[DONE]") return { ok:true };
+          onDelta(data);
+        }
+      }
+    }
+  }
+  return { ok:true };
+}
+
+async function callAi(history){
+  // 只保留最近 N 轮
+  const last = history.slice(-10);
+
+  // 1) 优先 /ai/stream（流式）
+  {
+    let acc = "";
+    const ok = await postStreamSSE("/ai/stream", { history: last }, (delta) => {
+      acc += delta;
+      // 实时更新最后一条 assistant
+      const lastMsg = chatHistory[chatHistory.length - 1];
+      if(lastMsg && lastMsg.role === "assistant"){
+        lastMsg.content = acc;
+      }else{
+        chatHistory.push({ role:"assistant", content: acc });
+      }
+      renderChat();
+    });
+
+    if(ok.ok) return { ok:true };
+    // 如果不是 404/405，直接返回错误（说明后端报错了）
+    if(ok.status !== 404 && ok.status !== 405) return ok;
+  }
+
+  // 2) 降级 /ai/chat2（你之前写的是 query 传 history）
+  {
+    const t = getToken();
+    const url = `/ai/chat2?history=${qs(JSON.stringify(last))}`;
+    const r = await apiFetch(url, { method:"POST", headers:{ Authorization:`Bearer ${t}` } }, 60000);
+    const d = await r.json().catch(()=> ({}));
+    if(r.ok) return { ok:true, reply: d.reply || "" };
+    if(r.status !== 404 && r.status !== 405) return { ok:false, status:r.status, detail:d.detail || null };
+  }
+
+  // 3) 最后降级 /ai/chat（最简单的单轮 message）
+  {
+    const t = getToken();
+    const message = last.filter(x=>x.role==="user").slice(-1)[0]?.content || "";
+    const r = await apiFetch(`/ai/chat?message=${qs(message)}`, { method:"POST", headers:{ Authorization:`Bearer ${t}` } }, 60000);
+    const d = await r.json().catch(()=> ({}));
+    if(r.ok) return { ok:true, reply: d.reply || "" };
+    return { ok:false, status:r.status, detail:d.detail || null };
+  }
+}
+
+async function sendChat(){
+  if (!getToken()) return chatHint.textContent = "请先登录（AI 需要鉴权）";
   const msg = chatInput.value.trim();
   if (!msg) return;
 
   chatHint.textContent = "";
   chatInput.value = "";
 
-  // 1) 写入用户消息历史
   chatHistory.push({ role: "user", content: msg });
   saveChat();
   renderChat();
 
-  // 2) 插入 typing 动画（不进历史）
-  const typingItem = document.createElement("div");
-  typingItem.className = "chat-item assistant";
-  typingItem.innerHTML = `
-    <div class="chat-bubble">
-      <span class="typing"><span></span><span></span><span></span></span>
-    </div>
-  `;
-  chatBox.appendChild(typingItem);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  // 先放一个空 assistant（用于流式更新）
+  chatHistory.push({ role: "assistant", content: "" });
+  saveChat();
+  renderChat();
 
-  try {
-    const last = chatHistory.slice(-10);
-    const r = await fetch(`${API_BASE}/ai/chat2?history=${encodeURIComponent(JSON.stringify(last))}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${getToken()}` }
-    });
-    const d = await r.json();
+  const typingItem = addTyping();
 
-    // 移除 typing
+  try{
+    const res = await callAi(chatHistory.filter(m => m.role === "user" || m.role === "assistant"));
     typingItem.remove();
 
-    if (!r.ok) {
-      chatHistory.push({ role: "assistant", content: `请求失败：${d.detail || r.status}` });
-      saveChat();
-      renderChat();
+    if(res.ok){
+      // 如果是降级模式返回 reply，就补上
+      if(typeof res.reply === "string"){
+        chatHistory[chatHistory.length - 1].content = res.reply || "(空回复)";
+        saveChat();
+        renderChat();
+      }else{
+        saveChat();
+      }
       return;
     }
 
-    chatHistory.push({ role: "assistant", content: d.reply || "(空回复)" });
+    // 失败：把最后一条 assistant 写错误
+    chatHistory[chatHistory.length - 1].content = `请求失败：HTTP ${res.status}${res.detail ? ("，" + res.detail) : ""}`;
     saveChat();
     renderChat();
-  } catch (e) {
+  }catch(e){
     typingItem.remove();
-    chatHistory.push({ role: "assistant", content: "网络/后端错误：请确认后端已启动" });
+    chatHistory[chatHistory.length - 1].content = "网络/后端错误：请确认 Render 后端正常运行";
     saveChat();
     renderChat();
   }
 }
 
-
-/* ---------------- TODO ---------------- */
-let todos=JSON.parse(localStorage.getItem("todos")||"[]");
-
-function saveTodos(){localStorage.setItem("todos",JSON.stringify(todos));}
-function renderTodos(){
-  todoList.innerHTML="";
-  todos.forEach((t,i)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`<input type="checkbox" ${t.done?"checked":""}
-      onchange="toggleTodo(${i})"> ${t.text}`;
-    todoList.appendChild(li);
-  });
-}
-function addTodo(){
-  if(!todoInput.value)return;
-  todos.push({text:todoInput.value,done:false});
-  todoInput.value="";
-  saveTodos(); renderTodos();
-}
-function toggleTodo(i){
-  todos[i].done=!todos[i].done;
-  saveTodos(); renderTodos();
-}
-renderTodos();
+document.getElementById("btnSendChat").addEventListener("click", sendChat);
+chatInput.addEventListener("keydown", (e) => {
+  if(e.key === "Enter") sendChat();
+});
 
 document.getElementById("btnClearChat").addEventListener("click", () => {
   chatHistory = [];
@@ -610,28 +866,43 @@ document.getElementById("btnClearChat").addEventListener("click", () => {
   renderChat();
   chatHint.textContent = "已清空对话";
 });
-// --- Theme toggle ---
-function applyTheme(theme) {
-  if (theme === "light") {
-    document.body.classList.add("light");
-    document.getElementById("btnTheme").textContent = "☀️ 日间";
-  } else {
-    document.body.classList.remove("light");
-    document.getElementById("btnTheme").textContent = "🌙 夜间";
-  }
-  localStorage.setItem("theme", theme);
+
+/* ---------------- TODO ---------------- */
+let todos = JSON.parse(localStorage.getItem("todos")||"[]");
+function saveTodos(){ localStorage.setItem("todos", JSON.stringify(todos)); }
+function renderTodos(){
+  const list = document.getElementById("todoList");
+  list.innerHTML = "";
+  todos.forEach((t,i)=>{
+    const li = document.createElement("li");
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!t.done;
+    cb.addEventListener("change", ()=>{
+      todos[i].done = !todos[i].done;
+      saveTodos();
+      renderTodos();
+    });
+
+    const text = document.createElement("div");
+    text.textContent = t.text;
+
+    li.appendChild(cb);
+    li.appendChild(text);
+    list.appendChild(li);
+  });
 }
-
-// 初始化主题
-applyTheme(localStorage.getItem("theme") || "dark");
-
-// 按钮点击切换
-document.getElementById("btnTheme").addEventListener("click", () => {
-  const cur = localStorage.getItem("theme") || "dark";
-  applyTheme(cur === "dark" ? "light" : "dark");
-});
-
-
+function addTodo(){
+  const input = document.getElementById("todoInput");
+  const v = input.value.trim();
+  if(!v) return;
+  todos.push({ text: v, done:false });
+  input.value = "";
+  saveTodos();
+  renderTodos();
+}
+document.getElementById("btnAddTodo").addEventListener("click", addTodo);
+renderTodos();
 </script>
 
 </body>

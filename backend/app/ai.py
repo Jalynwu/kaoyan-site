@@ -62,3 +62,43 @@ def chat_with_ai_history(history: list[dict]) -> str:
     resp.raise_for_status()
     data = resp.json()
     return data["choices"][0]["message"]["content"]
+
+import os, json
+import requests
+from fastapi.responses import StreamingResponse
+
+DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
+
+def stream_with_ai(messages):
+    api_key = os.getenv("DEEPSEEK_API_KEY")
+    if not api_key:
+        raise RuntimeError("DEEPSEEK_API_KEY not set")
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": "deepseek-chat",
+        "messages": messages,
+        "stream": True,
+    }
+
+    r = requests.post(DEEPSEEK_URL, headers=headers, json=payload, stream=True, timeout=60)
+    r.raise_for_status()
+
+    def gen():
+        # DeepSeek 流式：逐行返回类似 SSE 的数据
+        for line in r.iter_lines(decode_unicode=True):
+            if not line:
+                continue
+            # line 可能是 "data: {...}"
+            if line.startswith("data:"):
+                data = line[len("data:"):].strip()
+                if data == "[DONE]":
+                    yield "data: [DONE]\n\n"
+                    break
+                yield f"data: {data}\n\n"
+
+    return StreamingResponse(gen(), media_type="text/event-stream")

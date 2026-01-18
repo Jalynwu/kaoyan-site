@@ -15,6 +15,7 @@ from .deps import get_current_user, get_db
 from .ai import chat_with_ai
 from .ai import chat_with_ai_history
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Body
 
 
 
@@ -153,6 +154,18 @@ def ai_chat(
 ):
     reply = chat_with_ai(message)
     return {"reply": reply}
+
+
+
+@app.post("/ai/stream")
+def ai_stream(payload: dict = Body(...)):
+    # payload: {history: [...]}  由前端传入
+    history = payload.get("history", [])
+    # 这里可以加入你的“系统提示词”
+    system_prompt = "你是一个专门帮助用户考研的助手，回答要结构化、可执行，避免空泛。"
+    messages = [{"role": "system", "content": system_prompt}] + history
+    from app.ai import stream_with_ai
+    return stream_with_ai(messages)
 
 @app.post("/ai/chat2")
 def ai_chat2(
