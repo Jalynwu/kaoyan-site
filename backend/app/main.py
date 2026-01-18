@@ -20,6 +20,20 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://jalynwu.github.io",
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
@@ -150,14 +164,3 @@ def ai_chat2(
     reply = chat_with_ai_history(hist)
     return {"reply": reply}
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5500",  # 你本地前端如果用 Live Server
-        "http://localhost:5500",
-        "https://jalynwu.github.io",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
