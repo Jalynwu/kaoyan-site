@@ -403,7 +403,8 @@
 
 <script>
 /* ---------------- 基础配置 ---------------- */
-const API_BASE = "https://xxx.onrender.com";
+const API_BASE = "https://kaoyan-site.onrender.com";
+
 
 
 /* ---------------- Tab 切换 ---------------- */
@@ -418,7 +419,7 @@ document.querySelectorAll(".tab").forEach(btn => {
 
 /* ---------------- 倒计时 ---------------- */
 async function updateCountdown(){
-  const r = await fetch("https://xxx.onrender.com/countdown");
+  const r = await fetch("https://kaoyan-site.onrender.com/countdown");
   const d = await r.json();
   if(d.expired) return;
 
